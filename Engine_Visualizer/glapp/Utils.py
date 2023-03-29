@@ -9,6 +9,29 @@ def format_vertices(coordinates, triangles): #fait une array avec les triangle c
         allTriangles.append(coordinates[triangles[t + 2]])
     return np.array(allTriangles, np.float32)
 
+def compile_shader2(shader_source, shader_type):
+    shader = glCreateShader(shader_type)
+    glShaderSource(shader, shader_source)
+    glCompileShader(shader)
+
+    if glGetShaderiv(shader, GL_COMPILE_STATUS) != GL_TRUE:
+        raise Exception("Erreur de compilation du shader: " + glGetShaderInfoLog(shader).decode())
+
+    return shader
+
+
+def link_program(vertex_shader, fragment_shader):
+    program = glCreateProgram()
+    glAttachShader(program, vertex_shader)
+    glAttachShader(program, fragment_shader)
+    glLinkProgram(program)
+
+    if glGetProgramiv(program, GL_LINK_STATUS) != GL_TRUE:
+        raise Exception("Erreur de liaison du programme: " + glGetProgramInfoLog(program).decode())
+
+    return program
+
+
 def compile_shader(shader_type, shader_source): #prend le type de shader(vertex ou fragment) et le code GLSL
     shader_id = glCreateShader(shader_type) #Cette ligne crée un nouvel objet de shader avec le type de shader spécifié.
     glShaderSource(shader_id, shader_source) #specifie la source en tant que chaine de charactere

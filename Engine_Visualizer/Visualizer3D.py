@@ -1,3 +1,8 @@
+import os
+os.environ['PYOPENGL_PLATFORM'] = 'wgl'
+
+from OpenGL.GL import *
+from OpenGL.GL.shaders import compileProgram, compileShader
 from glapp.pyOGLApp import *
 import numpy as np
 from glapp.Utils import *
@@ -40,33 +45,7 @@ in vec3 colour;
 out vec4 frag_color;
 void main ()
 {
-	frag_color = vec4(colour, 1.0f);
-}
-'''
-
-shader_source = r'''
-#ifdef GL_ES
-precision mediump float;
-#endif
-
-uniform vec2 u_resolution;
-uniform float u_time;
-
-out vec4 frag_color;
-
-void main(){
-  vec2 coord = 6.0 * gl_FragCoord.xy / u_resolution;
-
-  for (int n = 1; n < 8; n++){
-    float i = float(n);
-    coord += vec2(0.7 / i * sin(i * coord.y + u_time + 0.3 * i) + 0.8, 0.4 / i * sin(coord.x + u_time + 0.3 * i) + 1.6);
-  }
-
-  coord *= vec2(0.7 / sin(coord.y + u_time + 0.3) + 0.8, 0.4 / sin(coord.x + u_time + 0.3) + 1.6);
-
-  vec3 color = vec3(0.5 * sin(coord.x) + 0.5, 0.5 * sin(coord.y) + 0.5, sin(coord.x + coord.y));
-
-  gl_FragColor = vec4(color, 1.0);
+	frag_color = vec4(colour, 0.0f);
 }
 '''
 
@@ -105,31 +84,31 @@ def getFile():
 class   Projections(PyOGLapp):
 
 	def __init__(self):
-		super().__init__(850, 200, 1280, 720)
+		super().__init__(320, 180, 1280, 720)
 		self.square = None
 		self.triangle = None
 		self.Axes = None
 		self.blade = None
 		
 	def initialise(self):
-		fileName = getFile()
+		# fileName = getFile()
 		# print (fileName)
-		# fileName2 = "/mnt/nfs/homes/aboudjel/Desktop/maxiRT/Engine2/models/cube.obj"
+		fileName = "/mnt/c/Users/Adnan/Desktop/code/visualizer3D/Engine_Visualizer/models/dragonblade.obj"
 		self.program_id = create_program(vertex_shader, fragment_shader)
-		self.shader = compileProgram(
-			compile_shader(vertex_source, GL_VERTEX_SHADER),
-			compile_shader(shader_source, GL_FRAGMENT_SHADER)
-		)
+		# self.shader = compileProgram(
+		# 	compile_shader(vertex_source, GL_VERTEX_SHADER),
+		# 	compile_shader(shader_source, GL_FRAGMENT_SHADER)
+		# )
 		# self.square = Square(self.program_id, pygame.Vector3(-0.5, 0.5, 0.0))
 		# self.triangle = Triangle(self.program_id, pygame.Vector3(0.5, -0.5, 0.0))
-		self.Axes = Axes(self.program_id, pygame.Vector3(0, 0, 0))
+		# self.Axes = Axes(self.program_id, pygame.Vector3(0, 0, 0))
 		# self.cube = Cube(self.program_id, pygame.Vector3(0, 2.0, -3.0))
 		self.blade = LoadMesh(fileName, self.program_id)
 		# self.blade = LoadMesh(fileName, self.program_id)
 		self.camera = Camera(self.program_id, self.screen_width, self.screen_height, self.blade.farest_point()*2)
 		# self.camera.update_pos(0, 0, self.blade.farest_point()*2)
 		# self.camera.initialise_mouse_pos()
-		glEnable(GL_DEPTH_TEST)
+		# glEnable(GL_DEPTH_TEST)
 
 		self.i = 0
 
@@ -138,8 +117,9 @@ class   Projections(PyOGLapp):
 		pass
 
 	def display(self):
+		glUseProgram(self.program_id)#cest pas le programme qui decide il repasse juste sur les point pour ajuster quand il seront dessiney
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-		glUseProgram(self.program_id) #cest pas le programme qui decide il repasse juste sur les point pour ajuster quand il seront dessiney
+		
 		self.camera.update()
 		# self.Axes.draw()
 		# self.triangle.draw()

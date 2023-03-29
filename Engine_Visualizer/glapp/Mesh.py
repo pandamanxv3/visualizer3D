@@ -10,7 +10,7 @@ class Mesh:
     def __init__(self, program_id, vertices, vertex_colors, draw_type, translation=pygame.Vector3(0, 0, 0)):
         self.vertices = vertices
         self.draw_type = draw_type
-        self.key_sensitivity = 0.004
+        self.key_sensitivity = 0.04
         # self.i = 0.005
         self.vao_ref = glGenVertexArrays(1) #un vao(vertex array object) stock plusieurs buffer
         glBindVertexArray(self.vao_ref)
@@ -41,7 +41,7 @@ class Mesh:
         if keys[pygame.K_LEFT]:
             self.transformation_mat = translate(self.transformation_mat, -self.key_sensitivity, 0, 0)
         if keys[pygame.K_SPACE]:
-            self.transformation_mat = self.transformation_mat @ rotate_x_mat(0.5)
+            self.transformation_mat = self.transformation_mat @ rotate_x_mat(3)
         self.transformation.load(self.transformation_mat)
         if rotation == True:
             rotation_angle = time.time() % 24 * 15 #pour chaque seconde passé on rotate de 15degres
