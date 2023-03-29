@@ -118,7 +118,7 @@ class   Projections(PyOGLapp):
 
 	def display(self):
 		glUseProgram(self.program_id)#cest pas le programme qui decide il repasse juste sur les point pour ajuster quand il seront dessiney
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+		# glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 		
 		self.camera.update()
 		# self.Axes.draw()
